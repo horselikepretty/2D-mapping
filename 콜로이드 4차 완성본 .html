@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>PVDF-TrFE 압전 필름 기반 배터리 2D Mapping (Top/Side + Module Ranking · HIGHLIGHT)</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      color: #e5e7eb;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #020617;
+      background-image:
+        radial-gradient(circle at 10% -10%, rgba(59,130,246,0.35), transparent 55%),
+        radial-gradient(circle at 90% 130%, rgba(34,197,94,0.25), transparent 55%),
+        linear-gradient(120deg, rgba(15,23,42,0.95), rgba(15,23,42,0.4)),
+        linear-gradient(#0b1220 1px, transparent 1px),
+        linear-gradient(90deg, #0b1220 1px, transparent 1px);
+      background-size: auto, auto, auto, 70px 70px, 70px 70px;
+    }
+
+    .shell {
+      position: relative;
+      max-width: 1320px;
+      width: 96vw;
+      padding: 20px 22px 24px 22px;
+      border-radius: 22px;
+      border: 1px solid transparent;
+      background-image:
+        linear-gradient(135deg, rgba(15,23,42,0.96), rgba(2,6,23,0.98)),
+        linear-gradient(135deg, rgba(59,130,246,0.9), rgba(34,197,94,0.55));
+      background-origin: border-box;
+      background-clip: padding-box, border-box;
+      box-shadow:
+        0 28px 80px rgba(0,0,0,0.9),
+        0 0 40px rgba(37,99,235,0.5);
+      overflow: hidden;
+    }
+
+    .shell::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 15% 0%, rgba(59,130,246,0.25), transparent 55%),
+        radial-gradient(circle at 85% 15%, rgba(16,185,129,0.24), transparent 55%);
+      opacity: 0.75;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+
+    .shell-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 14px;
+      gap: 16px;
+    }
+
+    .title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: #f9fafb;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: #cbd5f5;
+      max-width: 640px;
+      line-height: 1.5;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .chip {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.8);
+      border: 1px solid rgba(148,163,184,0.6);
+      backdrop-filter: blur(6px);
+      white-space: nowrap;
+    }
+
+    .header-right {
+      text-align: right;
+      font-size: 11px;
+      color: #9ca3af;
+    }
+    .header-right span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: radial-gradient(circle at 0 0, rgba(59,130,246,0.25), transparent 55%);
+      backdrop-filter: blur(4px);
+    }
+    .header-right strong {
+      color: #e5e7eb;
+      font-weight: 600;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.25fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      background: radial-gradient(circle at top left, #020617, #020617 50%, #000 100%);
+      border-radius: 16px;
+      box-shadow:
+        0 16px 40px rgba(15,23,42,0.95),
+        0 0 0 1px rgba(30,64,175,0.6);
+    }
+
+    .panel {
+      background: radial-gradient(circle at top left, rgba(15,23,42,0.96), rgba(2,6,23,0.98));
+      border-radius: 16px;
+      padding: 12px 14px 14px 14px;
+      box-shadow:
+        0 18px 40px rgba(15,23,42,0.9),
+        inset 0 0 0 1px rgba(30,64,175,0.85);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      backdrop-filter: blur(10px);
+    }
+
+    .section-title {
+      position: relative;
+      font-size: 12px;
+      font-weight: 600;
+      color: #e5e7eb;
+      margin-bottom: 4px;
+      padding-left: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .section-title::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 70%;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #38bdf8, #22c55e);
+      box-shadow: 0 0 10px rgba(34,197,94,0.7);
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    button {
+      border-radius: 999px;
+      border: 1px solid #334155;
+      background: radial-gradient(circle at top, rgba(15,23,42,0.98), rgba(15,23,42,0.9));
+      font-size: 11px;
+      padding: 4px 11px;
+      cursor: pointer;
+      color: #e5e7eb;
+      transition: all 0.16s ease-out;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      backdrop-filter: blur(4px);
+    }
+
+    button:hover {
+      background: radial-gradient(circle at top, rgba(30,64,175,0.9), rgba(15,23,42,0.98));
+      transform: translateY(-1px);
+      box-shadow: 0 10px 18px rgba(15,23,42,0.9);
+    }
+
+    button.active {
+      background: linear-gradient(135deg, #2563eb, #22c55e);
+      border-color: #38bdf8;
+      color: #0b1120;
+      box-shadow:
+        0 0 0 1px rgba(148,163,184,0.6),
+        0 0 30px rgba(56,189,248,0.7);
+    }
+
+    .slider-row {
+      margin-top: 2px;
+      font-size: 11px;
+    }
+    .slider-row input[type=range] {
+      width: 100%;
+      accent-color: #38bdf8;
+    }
+
+    .info-box {
+      font-size: 11px;
+      background: radial-gradient(circle at top left, rgba(15,23,42,0.98), rgba(15,23,42,0.95));
+      color: #e5e7eb;
+      border-radius: 12px;
+      padding: 8px 10px;
+      border: 1px solid rgba(129,140,248,0.9);
+      box-shadow:
+        0 14px 30px rgba(15,23,42,0.9),
+        0 0 0 1px rgba(15,23,42,0.9);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 4px 10px;
+      margin-top: 6px;
+    }
+    .info-label {
+      font-size: 10px;
+      color: #9ca3af;
+    }
+    .info-value {
+      font-size: 11px;
+      font-weight: 500;
+      color: #e5e7eb;
+    }
+
+    .legend {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 10px;
+      margin-top: 4px;
+    }
+    .legend-bar {
+      flex: 1;
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #22c55e 0%, #f97316 55%, #ef4444 100%);
+      box-shadow:
+        inset 0 0 0 1px rgba(15,23,42,0.9),
+        0 0 18px rgba(239,68,68,0.6);
+    }
+    .legend-labels {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      font-size: 10px;
+      color: #9ca3af;
+      margin-top: 2px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 10px;
+      background: rgba(30,64,175,0.55);
+      margin-right: 4px;
+      border: 1px solid rgba(129,140,248,0.85);
+      backdrop-filter: blur(6px);
+    }
+    .pill strong {
+      margin-right: 4px;
+    }
+
+    .toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: #e5e7eb;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: radial-gradient(circle at top left, rgba(15,23,42,0.98), rgba(15,23,42,0.9));
+      box-shadow:
+        inset 0 0 0 1px rgba(51,65,85,0.95),
+        0 10px 20px rgba(15,23,42,0.9);
+    }
+
+    .module-ranking {
+      margin-top: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 10px;
+      max-height: 150px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+    .module-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+    .module-row:hover {
+      background: rgba(15,23,42,0.8);
+      border-radius: 999px;
+      padding: 2px 4px;
+    }
+    .module-label {
+      width: 80px;
+      color: #e5e7eb;
+      white-space: nowrap;
+    }
+    .module-bar-wrapper {
+      flex: 1;
+      height: 7px;
+      border-radius: 999px;
+      background: #020617;
+      box-shadow: inset 0 0 0 1px rgba(30,64,175,0.7);
+      overflow: hidden;
+    }
+    .module-bar {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #22c55e, #facc15, #ef4444);
+      box-shadow: 0 0 10px rgba(56,189,248,0.6);
+      width: 0%;
+    }
+    .module-score {
+      width: 40px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      color: #e5e7eb;
+    }
+    .module-tag {
+      font-size: 9px;
+      padding: 1px 6px;
+      border-radius: 999px;
+      border: 1px solid;
+    }
+    .module-tag.safe {
+      border-color: #22c55e;
+      color: #bbf7d0;
+      background: rgba(22,163,74,0.18);
+    }
+    .module-tag.watch {
+      border-color: #facc15;
+      color: #fef9c3;
+      background: rgba(234,179,8,0.18);
+    }
+    .module-tag.hot {
+      border-color: #ef4444;
+      color: #fee2e2;
+      background: rgba(248,113,113,0.18);
+    }
+
+    @media (max-width: 980px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .header-right {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="shell-inner">
+      <div class="header">
+        <div>
+          <div class="title">PVDF-TrFE PZT FILM · EV PACK 2D MAPPING</div>
+          <div class="subtitle">
+            자율주행버스용 배터리 팩 상면 전체에 적층된 PVDF-TrFE 압전 필름을
+            행/열 전극 그리드로 분할하여, 셀 스택 단위의 열적·진동적·통합 압전 응답을
+            2D로 시각화한 개념 시뮬레이터입니다. (형상·수치는 개략/가상)
+          </div>
+          <div class="chips">
+            <span class="chip">Concept Sim · v1.5</span>
+            <span class="chip">Top / Side View</span>
+            <span class="chip">Module Risk Ranking + Highlight</span>
+          </div>
+        </div>
+        <div class="header-right">
+          <span>
+            <strong>팩 구성</strong>
+            4 × 3 모듈 · 모듈당 3 × 4 셀 스택 → 12 × 12 압전 픽셀
+          </span>
+        </div>
+      </div>
+
+      <div class="layout">
+        <div>
+          <svg id="packSvg" viewBox="0 0 2830 1772">
+            <defs>
+              <linearGradient id="packGrad" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#020617"/>
+                <stop offset="100%" stop-color="#020617"/>
+              </linearGradient>
+
+              <linearGradient id="packTopGrad" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0%" stop-color="#020617"/>
+                <stop offset="35%" stop-color="#111827"/>
+                <stop offset="70%" stop-color="#020617"/>
+                <stop offset="100%" stop-color="#000000"/>
+              </linearGradient>
+
+              <linearGradient id="packEdgeGrad" x1="0" x2="1" y1="0" y2="0">
+                <stop offset="0%" stop-color="#0f172a"/>
+                <stop offset="35%" stop-color="#1f2937"/>
+                <stop offset="65%" stop-color="#0f172a"/>
+                <stop offset="100%" stop-color="#020617"/>
+              </linearGradient>
+
+              <linearGradient id="moduleGrad" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0%" stop-color="#020617"/>
+                <stop offset="40%" stop-color="#111827"/>
+                <stop offset="100%" stop-color="#020617"/>
+              </linearGradient>
+
+              <linearGradient id="busbarGrad" x1="0" x2="1" y1="0" y2="0">
+                <stop offset="0%" stop-color="#f97316"/>
+                <stop offset="100%" stop-color="#ea580c"/>
+              </linearGradient>
+              <linearGradient id="hvCableGrad" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0%" stop-color="#f97316"/>
+                <stop offset="100%" stop-color="#e11d48"/>
+              </linearGradient>
+
+              <linearGradient id="coolantGrad" x1="0" x2="1" y1="0" y2="0">
+                <stop offset="0%" stop-color="#38bdf8"/>
+                <stop offset="100%" stop-color="#0ea5e9"/>
+              </linearGradient>
+
+              <linearGradient id="pvdfGrad" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0%" stop-color="rgba(56,189,248,0.6)"/>
+                <stop offset="50%" stop-color="rgba(59,130,246,0.25)"/>
+                <stop offset="100%" stop-color="rgba(30,64,175,0.18)"/>
+              </linearGradient>
+            </defs>
+
+            <!-- 공통 외곽 -->
+            <rect x="40" y="80" width="2750" height="1650" fill="rgba(0,0,0,0.85)" rx="120" ry="120" />
+            <rect x="70" y="40" width="2750" height="1650" fill="url(#packGrad)" rx="120" ry="120"
+                  stroke="rgba(15,23,42,0.9)" stroke-width="6" />
+            <rect x="150" y="150" width="2590" height="1470" fill="#020617" rx="80" ry="80"
+                  stroke="rgba(15,23,42,1)" stroke-width="4" />
+            <rect x="190" y="190" width="2510" height="1390" fill="url(#packEdgeGrad)" rx="64" ry="64"
+                  stroke="rgba(15,23,42,0.9)" stroke-width="4" />
+            <rect x="220" y="220" width="2450" height="1330" fill="url(#packTopGrad)" rx="48" ry="48"
+                  stroke="rgba(15,23,42,0.8)" stroke-width="3" />
+
+            <g id="topScrews">
+              <circle cx="320" cy="250" r="10" fill="#020617" stroke="#4b5563" stroke-width="3" />
+              <circle cx="1415" cy="235" r="10" fill="#020617" stroke="#4b5563" stroke-width="3" />
+              <circle cx="2510" cy="250" r="10" fill="#020617" stroke="#4b5563" stroke-width="3" />
+              <circle cx="320" cy="1520" r="10" fill="#020617" stroke="#4b5563" stroke-width="3" />
+              <circle cx="1415" cy="1535" r="10" fill="#020617" stroke="#4b5563" stroke-width="3" />
+              <circle cx="2510" cy="1520" r="10" fill="#020617" stroke="#4b5563" stroke-width="3" />
+              <circle cx="250" cy="460" r="9" fill="#020617" stroke="#4b5563" stroke-width="3" />
+              <circle cx="250" cy="1280" r="9" fill="#020617" stroke="#4b5563" stroke-width="3" />
+              <circle cx="2580" cy="460" r="9" fill="#020617" stroke="#4b5563" stroke-width="3" />
+              <circle cx="2580" cy="1280" r="9" fill="#020617" stroke="#4b5563" stroke-width="3" />
+            </g>
+
+            <rect x="260" y="260" width="2310" height="1250" fill="#020617" stroke="#020617" stroke-width="2"
+                  rx="34" ry="34" />
+
+            <!-- TOP VIEW GROUP -->
+            <g id="topViewGroup">
+              <g id="sideRails">
+                <rect x="270" y="275" width="20" height="1220" fill="#020617" stroke="#111827" stroke-width="1" />
+                <rect x="2550" y="275" width="20" height="1220" fill="#020617" stroke="#111827" stroke-width="1" />
+              </g>
+
+              <g id="cooling">
+                <rect x="272" y="288" width="28" height="1195" fill="url(#coolantGrad)" opacity="0.9" rx="14" ry="14"/>
+                <rect x="2530" y="288" width="28" height="1195" fill="url(#coolantGrad)" opacity="0.9" rx="14" ry="14"/>
+                <rect x="300" y="380" width="2190" height="24" fill="url(#coolantGrad)" opacity="0.6" rx="10" ry="10"/>
+                <rect x="300" y="885" width="2190" height="24" fill="url(#coolantGrad)" opacity="0.6" rx="10" ry="10"/>
+                <rect x="300" y="1390" width="2190" height="24" fill="url(#coolantGrad)" opacity="0.6" rx="10" ry="10"/>
+                <rect x="305" y="382" width="1100" height="6" fill="rgba(191,219,254,0.25)" rx="3" ry="3" />
+                <rect x="305" y="887" width="900" height="6" fill="rgba(191,219,254,0.25)" rx="3" ry="3" />
+                <rect x="305" y="1392" width="1300" height="6" fill="rgba(191,219,254,0.25)" rx="3" ry="3" />
+              </g>
+
+              <g id="busbars">
+                <rect x="2080" y="280" width="420" height="80" fill="url(#busbarGrad)" rx="20" ry="20"
+                      stroke="#7c2d12" stroke-width="3" />
+                <rect x="2098" y="300" width="90" height="40" fill="#f97316" rx="12" ry="12" />
+                <rect x="2200" y="300" width="90" height="40" fill="#facc15" rx="12" ry="12" />
+                <rect x="2320" y="270" width="150" height="95" fill="#0b1120" rx="16" ry="16"
+                      stroke="#f97316" stroke-width="3" />
+                <rect x="2335" y="285" width="120" height="40" fill="#020617" rx="10" ry="10" />
+                <text x="2395" y="312" text-anchor="middle" fill="#e5e7eb" font-size="20" font-weight="600">HV</text>
+                <text x="2395" y="338" text-anchor="middle" fill="#f97316" font-size="10">SERVICE DISCONNECT</text>
+              </g>
+
+              <g id="hvCable">
+                <path d="M2465 318 C 2570 320, 2630 360, 2700 430"
+                      fill="none" stroke="url(#hvCableGrad)" stroke-width="18" stroke-linecap="round" />
+                <path d="M2700 430 C 2740 470, 2760 520, 2765 580"
+                      fill="none" stroke="url(#hvCableGrad)" stroke-width="18" stroke-linecap="round" />
+              </g>
+
+              <g id="bms">
+                <rect x="2100" y="420" width="420" height="230" fill="#020617" stroke="#4b5563" stroke-width="4"
+                      rx="26" ry="26" opacity="0.98" />
+                <rect x="2120" y="440" width="380" height="80" fill="#020617" rx="20" ry="20"
+                      stroke="rgba(148,163,184,0.8)" stroke-width="2" />
+                <text x="2310" y="490" text-anchor="middle" fill="#e5e7eb" font-size="22" font-weight="600">
+                  PVDF-TrFE Sensor Readout
+                </text>
+                <circle cx="2145" cy="540" r="9" fill="#22c55e"/>
+                <circle cx="2190" cy="540" r="9" fill="#eab308"/>
+                <circle cx="2235" cy="540" r="9" fill="#ef4444"/>
+                <rect x="2275" y="532" width="82" height="18" fill="#020617" stroke="#4b5563" stroke-width="2"
+                      rx="6" ry="6" />
+                <rect x="2370" y="532" width="82" height="18" fill="#020617" stroke="#4b5563" stroke-width="2"
+                      rx="6" ry="6" />
+              </g>
+
+              <g id="dims">
+                <line x1="260" y1="1638" x2="2570" y2="1638" stroke="#4b5563" stroke-width="4" />
+                <line x1="260" y1="1608" x2="260" y2="1668" stroke="#4b5563" stroke-width="4" />
+                <line x1="2570" y1="1608" x2="2570" y2="1668" stroke="#4b5563" stroke-width="4" />
+                <text x="1415" y="1613" text-anchor="middle" dominant-baseline="hanging"
+                      fill="#e5e7eb" font-size="32" font-weight="600">
+                  2830 mm (팩 길이, 개략)
+                </text>
+                <line x1="225" y1="260" x2="225" y2="1510" stroke="#4b5563" stroke-width="4" />
+                <line x1="195" y1="260" x2="255" y2="260" stroke="#4b5563" stroke-width="4" />
+                <line x1="195" y1="1510" x2="255" y2="1510" stroke="#4b5563" stroke-width="4" />
+                <text x="205" y="885" transform="rotate(-90 205 885)"
+                      text-anchor="middle" dominant-baseline="hanging"
+                      fill="#e5e7eb" font-size="32" font-weight="600">
+                  1772 mm (팩 폭, 개략)
+                </text>
+              </g>
+
+              <rect x="260" y="260" width="2310" height="1250" fill="none"
+                    stroke="#111827" stroke-width="2" stroke-dasharray="10 8" />
+
+              <g id="modules"></g>
+
+              <g id="pvdf-film">
+                <rect x="260" y="260" width="2310" height="1250" fill="url(#pvdfGrad)"
+                      stroke="rgba(59,130,246,0.9)" stroke-width="3" rx="32" ry="32" />
+                <g id="pvdf-rows"></g>
+                <g id="pvdf-cols"></g>
+                <text x="380" y="320" fill="#e0f2fe" font-size="22" font-weight="600">
+                  PVDF-TrFE 압전 필름 (상판 전극 그리드)
+                </text>
+              </g>
+
+              <g id="cells"></g>
+            </g>
+
+            <!-- SIDE VIEW (셋업만, 내용은 스크립트에서 채움) -->
+            <g id="sideViewGroup" style="display:none"></g>
+          </svg>
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div class="panel">
+          <div>
+            <div class="section-title">0. 뷰 모드</div>
+            <div class="btn-group" id="viewButtons">
+              <button data-view="top" class="active">상면 2D 맵</button>
+              <button data-view="side">측면 단면 (셀 스택 팽창)</button>
+            </div>
+          </div>
+
+          <div>
+            <div class="section-title">1. 압전 센서 모드</div>
+            <div class="btn-group" id="modeButtons">
+              <button data-mode="thermal" class="active">열적 응답 (팽창/응력)</button>
+              <button data-mode="vibration">진동 응답 (기계·노면)</button>
+              <button data-mode="combined">통합 압전 지수</button>
+            </div>
+          </div>
+
+          <div>
+            <div class="section-title">2. 충전 상황</div>
+            <div class="btn-group" id="scenarioButtons">
+              <button data-scenario="slow" class="active">저속충전 (완속/정류장)</button>
+              <button data-scenario="fast">고속충전 (차고지 급속)</button>
+            </div>
+          </div>
+
+          <div>
+            <div class="section-title">3. 국부 과충전 / 셀 이상 이벤트</div>
+            <div class="toggle-row">
+              <span>국부 hotspot / 셀 이상 시나리오 중첩</span>
+              <div>
+                <button id="faultOffBtn" class="active">이상 없음</button>
+                <button id="faultOnBtn">국부 이상 추가</button>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="section-title">4. 시간 축 (충전 진행)</div>
+            <div class="slider-row">
+              <input id="timeSlider" type="range" min="0" max="100" step="1" value="0" />
+              <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af;margin-top:2px;">
+                <span>t = 0 (충전 시작)</span>
+                <span id="timeLabel">t = 0%</span>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="section-title">5. 선택된 압전 픽셀 정보</div>
+            <div class="info-box">
+              PVDF-TrFE 필름 격자 상의 한 픽셀(행/열 전극 교차점)을 클릭하면,
+              해당 위치에서 유도되는 압전 응답(전하/전압)을 개략 값으로 표시합니다. (가상 데이터)
+              <div class="info-grid">
+                <div>
+                  <div class="info-label">위치 (모듈 / 셀 스택)</div>
+                  <div class="info-value" id="cellPos">-</div>
+                </div>
+                <div>
+                  <div class="info-label">압전 응답</div>
+                  <div class="info-value" id="cellValue">-</div>
+                </div>
+                <div>
+                  <div class="info-label">충전 상황</div>
+                  <div class="info-value" id="cellScenario">-</div>
+                </div>
+                <div>
+                  <div class="info-label">진단 코멘트</div>
+                  <div class="info-value" id="cellDiag">-</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="section-title">6. 압전 2D 맵 컬러 스케일</div>
+            <div class="legend">
+              <span>낮은 압전 응답</span>
+              <div class="legend-bar"></div>
+              <span>높은 압전 응답</span>
+            </div>
+            <div class="legend-labels">
+              <span>셀 팽창/진동 작음, 구조·열 상태 양호</span>
+              <span>팽창/진동 큼, 국부 응력·열 이상 가능</span>
+            </div>
+          </div>
+
+          <div>
+            <div class="section-title">7. 모듈 위험도 랭킹</div>
+            <div class="module-ranking" id="moduleRanking"></div>
+          </div>
+
+          <div>
+            <div class="section-title">8. 개념 요약</div>
+            <div style="font-size:10px;color:#e5e7eb;">
+              <div class="pill"><strong>압전 필름</strong>팩 상면에 연속 PVDF-TrFE 필름 적층</div>
+              <div class="pill"><strong>전극 그리드</strong>행/열 전극 교차점 = 센서 픽셀</div>
+              <div class="pill"><strong>Top/Side View</strong>상면 맵 + 셀 스택 측면 팽창</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const GRID_COLS = 12;
+    const GRID_ROWS = 12;
+    const MODULE_COLS = 4;
+    const MODULE_ROWS = 3;
+    const CELLS_PER_MODULE_COL = GRID_COLS / MODULE_COLS;
+    const CELLS_PER_MODULE_ROW = GRID_ROWS / MODULE_ROWS;
+
+    const cellsGroup = document.getElementById("cells");
+    const modulesGroup = document.getElementById("modules");
+    const rowsGroup = document.getElementById("pvdf-rows");
+    const colsGroup = document.getElementById("pvdf-cols");
+    const sideViewGroup = document.getElementById("sideViewGroup");
+
+    const modeButtons = document.querySelectorAll("#modeButtons button");
+    const scenarioButtons = document.querySelectorAll("#scenarioButtons button");
+    const faultOffBtn = document.getElementById("faultOffBtn");
+    const faultOnBtn = document.getElementById("faultOnBtn");
+    const timeSlider = document.getElementById("timeSlider");
+    const timeLabel = document.getElementById("timeLabel");
+    const viewButtons = document.querySelectorAll("#viewButtons button");
+    const topViewGroup = document.getElementById("topViewGroup");
+    const moduleRankingEl = document.getElementById("moduleRanking");
+
+    const cellPosEl = document.getElementById("cellPos");
+    const cellValueEl = document.getElementById("cellValue");
+    const cellScenarioEl = document.getElementById("cellScenario");
+    const cellDiagEl = document.getElementById("cellDiag");
+
+    let currentMode = "thermal";
+    let currentScenario = "slow";
+    let faultEnabled = false;
+    let selectedCell = null;
+    let highlightedModuleIndex = null;
+
+    const cellRects = [];
+    const sideModuleRects = [];
+    const topModuleRects = [];
+
+    // 1) 상면 모듈 렌더링
+    (function drawModules() {
+      const regionX = 260;
+      const regionY = 260;
+      const regionW = 2310;
+      const regionH = 1250;
+
+      const modW = regionW / MODULE_COLS;
+      const modH = regionH / MODULE_ROWS;
+
+      for (let mr = 0; mr < MODULE_ROWS; mr++) {
+        for (let mc = 0; mc < MODULE_COLS; mc++) {
+          const idx = mr * MODULE_COLS + mc;
+          const x = regionX + mc * modW;
+          const y = regionY + mr * modH;
+
+          const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
+
+          const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+          rect.setAttribute("x", x + 8);
+          rect.setAttribute("y", y + 8);
+          rect.setAttribute("width", modW - 16);
+          rect.setAttribute("height", modH - 16);
+          rect.setAttribute("rx", 24);
+          rect.setAttribute("ry", 24);
+          rect.setAttribute("fill", "url(#moduleGrad)");
+          rect.setAttribute("stroke", "#020617");
+          rect.setAttribute("stroke-width", "3");
+          rect.setAttribute("data-module-index", idx);
+          group.appendChild(rect);
+
+          const innerX = x + 26;
+          const innerY = y + 24;
+          const innerW = modW - 52;
+          const innerH = modH - 48;
+
+          const stripeCount = 9;
+          for (let i = 0; i < stripeCount; i++) {
+            const sx = innerX + (innerW * i) / stripeCount;
+            const stripe = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            stripe.setAttribute("x", sx);
+            stripe.setAttribute("y", innerY + 4);
+            stripe.setAttribute("width", innerW / (stripeCount * 1.7));
+            stripe.setAttribute("height", innerH - 8);
+            stripe.setAttribute("fill", "rgba(148,163,184,0.22)");
+            group.appendChild(stripe);
+          }
+
+          const screws = [
+            [x + 30, y + 30],
+            [x + modW - 30, y + 30],
+            [x + 30, y + modH - 30],
+            [x + modW - 30, y + modH - 30]
+          ];
+          screws.forEach(([cx, cy]) => {
+            const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            c.setAttribute("cx", cx);
+            c.setAttribute("cy", cy);
+            c.setAttribute("r", 6);
+            c.setAttribute("fill", "#4b5563");
+            group.appendChild(c);
+          });
+
+          modulesGroup.appendChild(group);
+          topModuleRects[idx] = rect;
+        }
+      }
+    })();
+
+    // 2) 전극 그리드
+    (function drawElectrodes() {
+      const regionX = 260;
+      const regionY = 260;
+      const regionW = 2310;
+      const regionH = 1250;
+
+      const cellW = regionW / GRID_COLS;
+      const cellH = regionH / GRID_ROWS;
+
+      for (let r = 0; r <= GRID_ROWS; r++) {
+        const y = regionY + r * cellH;
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", regionX);
+        line.setAttribute("x2", regionX + regionW);
+        line.setAttribute("y1", y);
+        line.setAttribute("y2", y);
+        line.setAttribute("stroke", "rgba(191,219,254,0.5)");
+        line.setAttribute("stroke-width", r % 3 === 0 ? 2 : 1);
+        rowsGroup.appendChild(line);
+      }
+
+      for (let c = 0; c <= GRID_COLS; c++) {
+        const x = regionX + c * cellW;
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", x);
+        line.setAttribute("x2", x);
+        line.setAttribute("y1", regionY);
+        line.setAttribute("y2", regionY + regionH);
+        line.setAttribute("stroke", "rgba(191,219,254,0.5)");
+        line.setAttribute("stroke-width", c % 3 === 0 ? 2 : 1);
+        colsGroup.appendChild(line);
+      }
+    })();
+
+    // 3) 개별 픽셀 셀
+    (function drawCells() {
+      const regionX = 260;
+      const regionY = 260;
+      const regionW = 2310;
+      const regionH = 1250;
+
+      const cellW = regionW / GRID_COLS;
+      const cellH = regionH / GRID_ROWS;
+
+      for (let r = 0; r < GRID_ROWS; r++) {
+        for (let c = 0; c < GRID_COLS; c++) {
+          const x = regionX + c * cellW;
+          const y = regionY + r * cellH;
+          const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+          rect.setAttribute("x", x + 3);
+          rect.setAttribute("y", y + 3);
+          rect.setAttribute("width", cellW - 6);
+          rect.setAttribute("height", cellH - 6);
+          rect.setAttribute("rx", 4);
+          rect.setAttribute("ry", 4);
+          rect.setAttribute("data-row", r);
+          rect.setAttribute("data-col", c);
+          rect.style.stroke = "rgba(15,23,42,0.4)";
+          rect.style.strokeWidth = 1;
+          rect.style.cursor = "pointer";
+          rect.style.fill = "rgba(0,0,0,0)";
+          rect.style.opacity = 0.0;
+          rect.addEventListener("click", () => handleCellClick(rect, r, c));
+          cellsGroup.appendChild(rect);
+          cellRects.push(rect);
+        }
+      }
+    })();
+
+    // 4) 측면 모듈 (셀 스택) 생성
+    (function drawSideModules() {
+      const SIDE_X = 360;
+      const SIDE_Y = 580;
+      const SIDE_W = 2110;
+      const SIDE_H = 650;
+
+      // 바닥/상판 약간 그려서 팩 느낌
+      const base = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      base.setAttribute("x", SIDE_X - 40);
+      base.setAttribute("y", SIDE_Y + SIDE_H + 10);
+      base.setAttribute("width", SIDE_W + 80);
+      base.setAttribute("height", 30);
+      base.setAttribute("fill", "#020617");
+      base.setAttribute("stroke", "#0f172a");
+      base.setAttribute("stroke-width", "3");
+      sideViewGroup.appendChild(base);
+
+      const topLine = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      topLine.setAttribute("x", SIDE_X - 40);
+      topLine.setAttribute("y", SIDE_Y - 40);
+      topLine.setAttribute("width", SIDE_W + 80);
+      topLine.setAttribute("height", 16);
+      topLine.setAttribute("fill", "#020617");
+      topLine.setAttribute("stroke", "#1e293b");
+      topLine.setAttribute("stroke-width", "2");
+      sideViewGroup.appendChild(topLine);
+
+      const modW = SIDE_W / MODULE_COLS;
+      const modH = SIDE_H / MODULE_ROWS;
+
+      for (let mr = 0; mr < MODULE_ROWS; mr++) {
+        for (let mc = 0; mc < MODULE_COLS; mc++) {
+          const idx = mr * MODULE_COLS + mc;
+          const x = SIDE_X + mc * modW;
+          const y = SIDE_Y + (MODULE_ROWS - 1 - mr) * modH;
+
+          const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+
+          const baseRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+          const bx = x + 16;
+          const by = y + 16;
+          const bw = modW - 32;
+          const bh = modH - 32;
+
+          baseRect.setAttribute("x", bx);
+          baseRect.setAttribute("y", by);
+          baseRect.setAttribute("width", bw);
+          baseRect.setAttribute("height", bh);
+          baseRect.setAttribute("rx", 18);
+          baseRect.setAttribute("ry", 18);
+          baseRect.setAttribute("fill", "#020617");
+          baseRect.setAttribute("stroke", "#111827");
+          baseRect.setAttribute("stroke-width", "3");
+
+          baseRect.setAttribute("data-base-x", bx);
+          baseRect.setAttribute("data-base-y", by);
+          baseRect.setAttribute("data-base-w", bw);
+          baseRect.setAttribute("data-base-h", bh);
+
+          g.appendChild(baseRect);
+
+          const topHighlight = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+          topHighlight.setAttribute("x", bx + 4);
+          topHighlight.setAttribute("y", by + 6);
+          topHighlight.setAttribute("width", bw - 8);
+          topHighlight.setAttribute("height", 10);
+          topHighlight.setAttribute("rx", 6);
+          topHighlight.setAttribute("ry", 6);
+          topHighlight.setAttribute("fill", "rgba(148,163,184,0.32)");
+          g.appendChild(topHighlight);
+
+          const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          label.setAttribute("x", bx + bw / 2);
+          label.setAttribute("y", by + bh - 12);
+          label.setAttribute("text-anchor", "middle");
+          label.setAttribute("fill", "#9ca3af");
+          label.setAttribute("font-size", "22");
+          label.textContent = `M(${mr + 1},${mc + 1})`;
+          g.appendChild(label);
+
+          sideViewGroup.appendChild(g);
+          sideModuleRects[idx] = baseRect;
+        }
+      }
+    })();
+
+    function moduleIndexFromCell(row, col) {
+      const mRow = Math.floor(row / CELLS_PER_MODULE_ROW);
+      const mCol = Math.floor(col / CELLS_PER_MODULE_COL);
+      return mRow * MODULE_COLS + mCol;
+    }
+
+    function colorForValue(v) {
+      if (v < 0) v = 0;
+      if (v > 1) v = 1;
+      const c0 = { r: 34,  g: 197, b: 94  };  // green
+      const c1 = { r: 234, g: 179, b: 8   };  // yellow
+      const c2 = { r: 239, g: 68,  b: 68  };  // red
+
+      let r, g, b;
+      if (v <= 0.5) {
+        const t = v / 0.5;
+        r = Math.round(c0.r + (c1.r - c0.r) * t);
+        g = Math.round(c0.g + (c1.g - c0.g) * t);
+        b = Math.round(c0.b + (c2.b - c0.b) * t);
+      } else {
+        const t = (v - 0.5) / 0.5;
+        r = Math.round(c1.r + (c2.r - c1.r) * t);
+        g = Math.round(c1.g + (c2.g - c1.g) * t);
+        b = Math.round(c1.b + (c2.b - c1.b) * t);
+      }
+      return `rgba(${r},${g},${b},0.9)`;
+    }
+
+    function valueForCell(mode, scenario, tNorm, row, col, fault) {
+      const cx = col / (GRID_COLS - 1);
+      const cy = row / (GRID_ROWS - 1);
+      let thermalBase = 0;
+      let vibBase = 0;
+
+      if (scenario === "slow") {
+        const edgeFactor = 0.2 + 0.3 * (Math.abs(cx - 0.5) + Math.abs(cy - 0.5));
+        thermalBase = 0.08 + 0.12 * edgeFactor + 0.15 * tNorm;
+      } else if (scenario === "fast") {
+        const dx = cx - 0.5;
+        const dy = cy - 0.5;
+        const distCenter = Math.sqrt(dx * dx + dy * dy);
+        const swell = 1 - distCenter;
+        thermalBase = 0.15 + 0.7 * swell * (0.3 + 0.7 * tNorm);
+      }
+
+      if (scenario === "slow") {
+        vibBase = 0.05 + 0.05 * (Math.abs(cx - 0.5) + Math.abs(cy - 0.5));
+      } else if (scenario === "fast") {
+        const edgeHot = Math.max(Math.abs(cx - 0.5), Math.abs(cy - 0.5));
+        vibBase = 0.08 + 0.25 * edgeHot * (0.2 + 0.8 * tNorm);
+      }
+
+      if (fault) {
+        const hotspotX = 0.3;
+        const hotspotY = 0.7;
+        const dxh = cx - hotspotX;
+        const dyh = cy - hotspotY;
+        const d2 = dxh * dxh + dyh * dyh;
+        const local = Math.exp(-d2 / 0.01);
+        thermalBase += 0.6 * local * (0.3 + 0.7 * tNorm);
+        vibBase += 0.3 * local * (0.3 + 0.7 * tNorm);
+      }
+
+      let base = 0;
+      if (mode === "thermal") {
+        base = thermalBase;
+      } else if (mode === "vibration") {
+        base = vibBase;
+      } else {
+        base = 0.6 * thermalBase + 0.4 * vibBase;
+      }
+
+      if (base < 0) base = 0;
+      if (base > 1) base = 1;
+      return base;
+    }
+
+    function render() {
+      const tNorm = parseInt(timeSlider.value, 10) / 100;
+
+      const moduleCount = MODULE_ROWS * MODULE_COLS;
+      const sums = new Array(moduleCount).fill(0);
+      const maxs = new Array(moduleCount).fill(0);
+      const counts = new Array(moduleCount).fill(0);
+
+      cellRects.forEach(rect => {
+        const r = parseInt(rect.getAttribute("data-row"), 10);
+        const c = parseInt(rect.getAttribute("data-col"), 10);
+        const v = valueForCell(currentMode, currentScenario, tNorm, r, c, faultEnabled);
+        rect.style.fill = colorForValue(v);
+        rect.style.opacity = 0.9;
+
+        const midx = moduleIndexFromCell(r, c);
+        sums[midx] += v;
+        counts[midx] += 1;
+        if (v > maxs[midx]) maxs[midx] = v;
+      });
+
+      const moduleStats = [];
+      for (let i = 0; i < moduleCount; i++) {
+        const avg = counts[i] ? sums[i] / counts[i] : 0;
+        const max = maxs[i];
+        const mRow = Math.floor(i / MODULE_COLS) + 1;
+        const mCol = (i % MODULE_COLS) + 1;
+        moduleStats.push({ index: i, avg, max, mRow, mCol });
+      }
+
+      updateModuleRanking(moduleStats);
+      updateSideView(moduleStats);
+
+      timeLabel.textContent = `t = ${timeSlider.value}%`;
+
+      if (selectedCell) {
+        const rr = parseInt(selectedCell.getAttribute("data-row"), 10);
+        const cc = parseInt(selectedCell.getAttribute("data-col"), 10);
+        updateCellInfo(rr, cc, tNorm);
+      }
+    }
+
+    function updateSideView(moduleStats) {
+      moduleStats.forEach(stat => {
+        const rect = sideModuleRects[stat.index];
+        if (!rect) return;
+        const risk = stat.max;
+        const baseX = parseFloat(rect.getAttribute("data-base-x"));
+        const baseY = parseFloat(rect.getAttribute("data-base-y"));
+        const baseW = parseFloat(rect.getAttribute("data-base-w"));
+        const baseH = parseFloat(rect.getAttribute("data-base-h"));
+
+        const swellFactor = 1 + 0.25 * risk;
+        const newH = baseH * swellFactor;
+        const newY = baseY + (baseH - newH);
+
+        rect.setAttribute("x", baseX);
+        rect.setAttribute("y", newY);
+        rect.setAttribute("width", baseW);
+        rect.setAttribute("height", newH);
+        rect.style.fill = colorForValue(risk);
+        rect.style.opacity = 0.9;
+        rect.style.stroke = "rgba(15,23,42,1)";
+        rect.style.strokeWidth = 3;
+        rect.style.filter = "none";
+      });
+
+      // 측면 뷰에서도, 나중에 필요하면 모듈 하이라이트를 여기에 추가할 수 있음
+      if (highlightedModuleIndex !== null && sideModuleRects[highlightedModuleIndex]) {
+        const rect = sideModuleRects[highlightedModuleIndex];
+        rect.style.stroke = "#38bdf8";
+        rect.style.strokeWidth = 5;
+        rect.style.filter = "drop-shadow(0 0 18px rgba(56,189,248,0.9))";
+      }
+    }
+
+    function updateModuleRanking(moduleStats) {
+      if (!moduleRankingEl) return;
+      const sorted = moduleStats.slice().sort((a, b) => b.max - a.max);
+      let html = "";
+      sorted.forEach(stat => {
+        const risk = stat.max;
+        const pct = Math.round(risk * 100);
+        const scoreStr = pct < 10 ? (" " + pct) : pct.toString();
+        let tag = "SAFE";
+        let tagClass = "safe";
+        if (risk >= 0.6 && risk < 0.8) {
+          tag = "WATCH";
+          tagClass = "watch";
+        } else if (risk >= 0.8) {
+          tag = "HOT";
+          tagClass = "hot";
+        }
+        html += `
+          <div class="module-row" data-index="${stat.index}">
+            <div class="module-label">M(${stat.mRow},${stat.mCol})</div>
+            <div class="module-bar-wrapper">
+              <div class="module-bar" style="width:${pct}%;"></div>
+            </div>
+            <div class="module-score">${scoreStr}%</div>
+            <div class="module-tag ${tagClass}">${tag}</div>
+          </div>
+        `;
+      });
+      moduleRankingEl.innerHTML = html;
+
+      // 랭킹과 실제 모듈 연결: hover / click 시 하이라이트
+      const rows = moduleRankingEl.querySelectorAll(".module-row");
+      rows.forEach(row => {
+        const idx = parseInt(row.getAttribute("data-index"), 10);
+        row.addEventListener("mouseenter", () => highlightModule(idx));
+        row.addEventListener("mouseleave", () => highlightModule(null));
+        row.addEventListener("click", () => highlightModule(idx));
+      });
+    }
+
+    function highlightModule(index) {
+      highlightedModuleIndex = index;
+
+      topModuleRects.forEach((rect, i) => {
+        if (!rect) return;
+        if (index !== null && i === index) {
+          rect.style.stroke = "#e52828";
+          rect.style.strokeWidth = 8;
+          rect.style.filter = "drop-shadow(0 0 22px rgba(248,113,113,0.9))";
+        } else {
+          rect.style.stroke = "#020617";
+          rect.style.strokeWidth = 3;
+          rect.style.filter = "none";
+        }
+      });
+
+      // 측면 뷰는 render 시 updateSideView 안에서 반영
+      updateSideView(getCurrentModuleStats());
+    }
+
+    // 현재 moduleStats를 다시 계산해서 넘겨주는 보조 함수
+    function getCurrentModuleStats() {
+      const tNorm = parseInt(timeSlider.value, 10) / 100;
+      const moduleCount = MODULE_ROWS * MODULE_COLS;
+      const sums = new Array(moduleCount).fill(0);
+      const maxs = new Array(moduleCount).fill(0);
+      const counts = new Array(moduleCount).fill(0);
+
+      cellRects.forEach(rect => {
+        const r = parseInt(rect.getAttribute("data-row"), 10);
+        const c = parseInt(rect.getAttribute("data-col"), 10);
+        const v = valueForCell(currentMode, currentScenario, tNorm, r, c, faultEnabled);
+        const midx = moduleIndexFromCell(r, c);
+        sums[midx] += v;
+        counts[midx] += 1;
+        if (v > maxs[midx]) maxs[midx] = v;
+      });
+
+      const moduleStats = [];
+      for (let i = 0; i < moduleCount; i++) {
+        const avg = counts[i] ? sums[i] / counts[i] : 0;
+        const max = maxs[i];
+        const mRow = Math.floor(i / MODULE_COLS) + 1;
+        const mCol = (i % MODULE_COLS) + 1;
+        moduleStats.push({ index: i, avg, max, mRow, mCol });
+      }
+      return moduleStats;
+    }
+
+    function handleCellClick(rect, row, col) {
+      selectedCell = rect;
+      const tNorm = parseInt(timeSlider.value, 10) / 100;
+      updateCellInfo(row, col, tNorm);
+
+      cellRects.forEach(r => {
+        r.style.strokeWidth = 1;
+        r.style.stroke = "rgba(15,23,42,0.4)";
+      });
+      rect.style.strokeWidth = 2.4;
+      rect.style.stroke = "#e5e7eb";
+
+      // 셀을 클릭했을 때도 해당 모듈 하이라이트
+      const mIdx = moduleIndexFromCell(row, col);
+      highlightModule(mIdx);
+    }
+
+    function updateCellInfo(row, col, tNorm) {
+      const moduleIndex = moduleIndexFromCell(row, col);
+      const mRow = Math.floor(moduleIndex / MODULE_COLS) + 1;
+      const mCol = (moduleIndex % MODULE_COLS) + 1;
+
+      const localRow = (row % CELLS_PER_MODULE_ROW) + 1;
+      const localCol = (col % CELLS_PER_MODULE_COL) + 1;
+
+      const v = valueForCell(currentMode, currentScenario, tNorm, row, col, faultEnabled);
+
+      cellPosEl.textContent = `모듈 (${mRow}, ${mCol}) / 셀 스택 (${localRow}, ${localCol})`;
+      cellValueEl.textContent = piezoValueLabel(currentMode, v);
+      cellScenarioEl.textContent = scenarioLabel(currentScenario, faultEnabled);
+      cellDiagEl.textContent = diagnosticText(currentMode, currentScenario, v, faultEnabled);
+    }
+
+    function piezoValueLabel(mode, v) {
+      if (mode === "thermal") {
+        const q = 5 + v * 45;
+        return `열적 압전 전하 ≈ ${q.toFixed(1)} pC/cm² (가상)`;
+      } else if (mode === "vibration") {
+        const vpiezo = 10 + v * 90;
+        return `진동 응답 전압 피크 ≈ ${vpiezo.toFixed(1)} mV (가상)`;
+      } else {
+        const q = 5 + v * 45;
+        const vpiezo = 10 + v * 90;
+        return `전하 ≈ ${q.toFixed(1)} pC/cm² / 전압 ≈ ${vpiezo.toFixed(1)} mV (가상)`;
+      }
+    }
+
+    function scenarioLabel(s, fault) {
+      let base = s === "slow" ? "저속충전 (완속/정류장)" : "고속충전 (차고지 급속)";
+      if (fault) base += " + 국부 셀 이상";
+      return base;
+    }
+
+    function diagnosticText(mode, scenario, v, fault) {
+      if (mode === "thermal") {
+        if (!fault) {
+          if (v < 0.35) return "충전 중 셀 팽창이 균일하고 작음 – 클램핑/압력 상태 양호";
+          if (v < 0.65) return "일부 셀 스택에서 팽창 증가 – 장기 반복 시 노화 편차 가능";
+          return "고속충전에 따른 팽창이 크게 나타나는 영역 – 열 관리 및 충전 전류 제한 필요";
+        } else {
+          if (v < 0.35) return "국부 이상이 있으나 아직 압전 응답이 작음 – 초기 단계, 주기적 모니터링 필요";
+          if (v < 0.65) return "국부 과충전/가스 발생 가능성 – 해당 모듈 셀 전압·온도 연계 모니터링 필요";
+          return "국부 팽창 과대 – 셀 내부 가스 발생·리튬 석출·SEI 이상 가능, 열폭주 전 단계로 간주하고 즉각적 제어 필요";
+        }
+      } else if (mode === "vibration") {
+        if (!fault) {
+          if (v < 0.35) return "충전 중 진동 응답이 낮음 – 구조적/노면 영향 작음";
+          if (v < 0.65) return "일부 모듈 경계에서 진동이 집중 – 마운트/고정 구조의 공진 검토 필요";
+          return "진동 응답이 크게 집중 – 반복 충격으로 인한 접촉 불량·피로 손상 위험, 구조 강화 필요";
+        } else {
+          if (v < 0.35) return "국부 이상 부근이지만 진동 응답은 아직 작음 – 초기 미세 균열 가능성, 추세 관찰 필요";
+          if (v < 0.65) return "셀 이상 영역 인근에서 진동 응답 증가 – 접촉 저항 변화·탭 손상 가능성";
+          return "국부 이상 영역이 진동에 매우 민감 – 구조 피로 파괴/전극 탭 손상 위험, 운전 조건 완화 및 검사가 필요";
+        }
+      } else {
+        if (!fault) {
+          if (v < 0.3) return "통합 압전 지수 낮음 – 열·기계 상태 모두 안정 영역";
+          if (v < 0.6) return "특정 모듈/셀에서 응답 증가 – 고속충전 시 중장기 열·기계 스트레스 축적 구간";
+          return "통합 지수 매우 높음 – 열·응력이 동시에 집중되는 영역, 충전 프로파일 조정·냉각 강화 필요";
+        } else {
+          if (v < 0.3) return "국부 이상이 있으나 현재 응답은 낮음 – 초기 전조 단계 가능, 상시 모니터링 필요";
+          if (v < 0.6) return "국부 이상 영역에서 열·기계 응답 동시 증가 – 열폭주 및 구조 손상의 전구 단계로 판단";
+          return "통합 압전 지수 극대 – 셀 이상, 열폭주, 구조 손상이 동시에 의심되는 영역으로, 즉각적인 충전 중단 및 안전 조치 필요";
+        }
+      }
+    }
+
+    // 버튼 이벤트들
+    modeButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        modeButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentMode = btn.getAttribute("data-mode");
+        render();
+      });
+    });
+
+    scenarioButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        scenarioButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentScenario = btn.getAttribute("data-scenario");
+        render();
+      });
+    });
+
+    faultOffBtn.addEventListener("click", () => {
+      faultEnabled = false;
+      faultOffBtn.classList.add("active");
+      faultOnBtn.classList.remove("active");
+      render();
+    });
+
+    faultOnBtn.addEventListener("click", () => {
+      faultEnabled = true;
+      faultOnBtn.classList.add("active");
+      faultOffBtn.classList.remove("active");
+      render();
+    });
+
+    timeSlider.addEventListener("input", () => {
+      render();
+    });
+
+    viewButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        viewButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const view = btn.getAttribute("data-view");
+        if (view === "top") {
+          topViewGroup.style.display = "";
+          sideViewGroup.style.display = "none";
+        } else {
+          topViewGroup.style.display = "none";
+          sideViewGroup.style.display = "";
+        }
+      });
+    });
+
+    // 초기 렌더
+    render();
+  </script>
+</body>
+</html>
